@@ -13,6 +13,9 @@ class LocalGame(GameBaseMode):
         self.countdown_timer = 0
         self.timer = Timer()
 
+    def set_vs_cpu(self, vs_cpu):
+        self.paddle2.is_cpu = vs_cpu
+
     def update_local(self):
         if self.paused_game:
             return
@@ -27,7 +30,7 @@ class LocalGame(GameBaseMode):
         self.puck.check_paddle_collision(self.paddle1)
         self.puck.check_paddle_collision(self.paddle2)
         self.paddle1.update_paddle(self.rink)
-        self.paddle2.update_paddle(self.rink)
+        self.paddle2.update_paddle(self.rink, self.puck)
         self.paddle1.check_paddle_collision(self.paddle2)
         self._update_flash()
 

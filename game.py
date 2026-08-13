@@ -42,8 +42,10 @@ while is_running:
             if local_menu.back_button.is_clicked(event):
                 game_state = MENU
             elif local_menu.user_button.is_clicked(event):
+                local_game.set_vs_cpu(False)
                 game_state = LOCAL
             elif local_menu.cpu_button.is_clicked(event):
+                local_game.set_vs_cpu(True)
                 game_state = LOCAL
         elif game_state == LOCAL:
             local_game.handle_ui_events(event)
