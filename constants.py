@@ -3,6 +3,7 @@ import pygame
 #Constants for game
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
+FPS = 60
 
 #PLAYERS KEYS
 P1_KEYS = {'left': pygame.K_a, 'right': pygame.K_d, 'up': pygame.K_w, 'down': pygame.K_s}
@@ -33,6 +34,10 @@ SCOREBOARD_PADDING = 10
 SCOREBOARD_BORDER_THICKNESS = 1
 SCOREBOARD_OFFSET_X = 60
 SCOREBOARD_OFFSET_Y = 20
+
+#TIMER SETTINGS
+TIMER_DURATION_SECONDS = 180
+TIMER_GAP_Y = 24
 
 #Rink Settings
 RINK_WIDTH = 0.50

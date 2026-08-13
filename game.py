@@ -20,6 +20,8 @@ local_game = LocalGame(window)
 local_menu = LocalMenu(window)
 
 is_running = True
+
+#can be converted to event dictionary types
 while is_running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,6 +49,8 @@ while is_running:
             local_game.handle_ui_events(event)
             if local_game.menu_button.is_clicked(event):
                 game_state = MENU
+            elif local_game.timer.time_up and local_game.rematch_button.is_clicked(event):
+                local_game.reset_match()
     
     window.fill(BLACK) #fills screen to after event loop
     

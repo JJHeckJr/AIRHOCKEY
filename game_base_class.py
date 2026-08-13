@@ -11,6 +11,7 @@ class GameBaseMode:
         self.puck = Puck(self.rink)
         self.paused_game = False
         self.menu_button = Button("Main Menu", 0, 0, PAUSE_MENU_BUTTON_WIDTH, PAUSE_MENU_BUTTON_HEIGHT)
+        self.rematch_button = Button("Rematch", 0, 0, PAUSE_MENU_BUTTON_WIDTH, PAUSE_MENU_BUTTON_HEIGHT)
         self.flash_goal = None
         self.flash_timer = 0
         self.scoreboard = Scoreboard()
@@ -36,6 +37,9 @@ class GameBaseMode:
             self.flash_goal = None
 
     def _on_goal_reset(self):
+        pass
+
+    def reset_match(self):
         pass
 
     def _draw_flash(self, window):
@@ -64,5 +68,30 @@ class GameBaseMode:
         window.blit(text, text.get_rect(center=(w // 2, h // 2 - 40)))
 
         self.menu_button.rect.center = (w // 2, h // 2 + 30)
+        self.menu_button.draw_button(window)
+
+    def _draw_winner_overlay(self, window):
+        if not self.timer.time_up:
+            return
+        w, h = window.get_width(), window.get_height()
+        overlay = pygame.Surface((w, h), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, PAUSE_OVERLAY_ALPHA))
+        window.blit(overlay, (0, 0))
+
+        if self.scoreboard.top_score > self.scoreboard.bottom_score:
+            message = "BOT WINS"
+        elif self.scoreboard.bottom_score > self.scoreboard.top_score:
+            message = "TOP Wins"
+        else:
+            message = "TIE GAME"
+
+        font = pygame.font.Font(None, PAUSE_FONT_SIZE)
+        text = font.render(message, True, WHITE)
+        window.blit(text, text.get_rect(center=(w // 2, h // 2 - 90)))
+
+        button_gap = 20
+        self.rematch_button.rect.center = (w // 2 - (PAUSE_MENU_BUTTON_WIDTH + button_gap) // 2, h // 2 + 60)
+        self.menu_button.rect.center =  ( w // 2 + (PAUSE_MENU_BUTTON_WIDTH + button_gap) // 2, h // 2 + 60)
+        self.rematch_button.draw_button(window)
         self.menu_button.draw_button(window)
 
