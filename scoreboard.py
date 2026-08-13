@@ -23,8 +23,9 @@ class Scoreboard:
             text_rect.left - SCOREBOARD_PADDING,
             text_rect.top - SCOREBOARD_PADDING,
             text_rect.width + SCOREBOARD_PADDING * 2,
-            text_rect.height + SCOREBOARD_PADDING * 2  
+            text_rect.height + SCOREBOARD_PADDING * 2
         )
+        self.box_rect = box_rect
 
         pygame.draw.rect(window, GRAY, box_rect)
         pygame.draw.rect(window, WHITE, box_rect, SCOREBOARD_BORDER_THICKNESS)

@@ -46,7 +46,6 @@ class Rink:
         #bottom wall (two segments with gap for goal)
         pygame.draw.line(window, WHITE, (self.x, self.y + self.height), (goal_left, self.y + self.height), RINK_BORDER_THICKNESS)
         pygame.draw.line(window, WHITE, (goal_right, self.y + self.height), (self.x + self.width, self.y + self.height), RINK_BORDER_THICKNESS)
-
         
         #center line
         # tuples grab starting and edning position of line

@@ -1,7 +1,9 @@
 import pygame
 from constants import *
 from paddle import Paddle
+from puck import Puck
 from game_base_class import GameBaseMode
+from timer import Timer
 
 class LocalGame(GameBaseMode):
     def __init__(self, window):
@@ -9,13 +11,17 @@ class LocalGame(GameBaseMode):
         self.paddle1 = Paddle(self.rink, P1_KEYS, RED, half='bottom')
         self.paddle2 = Paddle(self.rink, P2_KEYS, GREEN, half='top')
         self.countdown_timer = 0
+        self.timer = Timer()
 
     def update_local(self):
         if self.paused_game:
             return
+        if self.timer.time_up:
+            return
         if self.countdown_timer > 0:
             self.countdown_timer -= 1
             return
+        self.timer.update_score()
         self.puck.move()
         self.puck.check_rink_walls(self.rink)
         self.puck.check_paddle_collision(self.paddle1)
@@ -39,10 +45,23 @@ class LocalGame(GameBaseMode):
             w, h = window.get_width(), window.get_height()
             window.blit(text, text.get_rect(center=(w // 2, h // 2)))
         self.scoreboard.draw_scoreboard(window, self.rink)
+        self.timer.draw_timer(window, self.scoreboard.box_rect)
         self._draw_pause_overlay(window)
+        self._draw_winner_overlay(window)
 
     def _on_goal_reset(self):
         self.puck.reset(self.rink, self.flash_goal)
         self.paddle1.reset_paddle(self.rink)
         self.paddle2.reset_paddle(self.rink)
+        self.countdown_timer = 180
+
+    def reset_match(self):
+        self.scoreboard.top_score = 0
+        self.scoreboard.bottom_score = 0
+        self.timer.reset()
+        self.puck = Puck(self.rink)
+        self.paddle1.reset_paddle(self.rink)
+        self.paddle2.reset_paddle(self.rink)
+        self.flash_goal = None
+        self.flash_timer = 0
         self.countdown_timer = 180
