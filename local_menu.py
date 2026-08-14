@@ -4,7 +4,7 @@ from buttons import Button
 
 
 class LocalMenu:
-    def __init__(self, window):
+    def __init__(self, window, local_game):
         w = window.get_width()
         h = window.get_height()
         button_width = int(w * .25)
@@ -20,7 +20,23 @@ class LocalMenu:
         self.user_button = Button("User vs User", right_x, int(h * 0.4), button_width, button_height)
         self.back_button = Button("<- Back", back_x, int(h * 0.52), back_width, button_height, border_only=True, text_color=WHITE)
 
-    def draw_local_menu(self, window):
+        self.local_game = local_game
+
+    def handle_ui_events(self, event):
+        if self.back_button.is_clicked(event):
+            return MENU
+        if self.user_button.is_clicked(event):
+            self.local_game.set_vs_cpu(False)
+            return LOCAL
+        if self.cpu_button.is_clicked(event):
+            self.local_game.set_vs_cpu(True)
+            return LOCAL
+        return None
+
+    def update(self):
+        pass
+
+    def draw(self, window):
         self.cpu_button.draw_button(window)
         self.user_button.draw_button(window)
         self.back_button.draw_button(window)

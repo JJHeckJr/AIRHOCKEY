@@ -7,7 +7,7 @@ class Practice(GameBaseMode):
         super().__init__(window)
         self.paddle = Paddle(self.rink, P1_KEYS, RED)
 
-    def update_practice(self):
+    def update(self):
         if self.paused_game:
             return
         self.puck.move()

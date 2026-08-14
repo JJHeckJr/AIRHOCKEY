@@ -21,6 +21,9 @@ class GameBaseMode:
             self.paused_game = not self.paused_game
         if self.paused_game and self.menu_button.is_clicked(event):
             self.paused_game = False
+        if self.menu_button.is_clicked(event):
+            return MENU
+        return None
     
     def _update_flash(self):
         goal = self.puck.check_scored_goal(self.rink)
