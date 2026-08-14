@@ -14,7 +14,19 @@ class Menu:
         self.local_button = Button("Local", center_x, int(h * 0.52), button_width, button_height)
         self.multiplayer_button = Button("Multiplayer", center_x, int(h * 0.64), button_width, button_height)
 
-    def draw_menu(self, window):
+    def handle_ui_events(self, event):
+        if self.practice_button.is_clicked(event):
+            return PRACTICE
+        if self.local_button.is_clicked(event):
+            return LOCAL_MENU
+        if self.multiplayer_button.is_clicked(event):
+            return MULTIPLAYER
+        return None
+
+    def update(self):
+        pass
+    
+    def draw(self, window):
         w = window.get_width()
         h = window.get_height()
 

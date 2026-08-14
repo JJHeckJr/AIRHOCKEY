@@ -16,7 +16,15 @@ class LocalGame(GameBaseMode):
     def set_vs_cpu(self, vs_cpu):
         self.paddle2.is_cpu = vs_cpu
 
-    def update_local(self):
+    def handle_ui_events(self, event):
+        next_state = super().handle_ui_events(event)
+        if next_state is not None:
+            return next_state
+        if self.timer.time_up and self.rematch_button.is_clicked(event):
+            self.reset_match()
+        return None
+
+    def update(self):
         if self.paused_game:
             return
         if self.timer.time_up:
@@ -34,7 +42,7 @@ class LocalGame(GameBaseMode):
         self.paddle1.check_paddle_collision(self.paddle2)
         self._update_flash()
 
-    def draw_local(self, window):
+    def draw(self, window):
         self.rink.draw_rink(window)
         if self.flash_timer > 0:
             self._draw_flash(window)
