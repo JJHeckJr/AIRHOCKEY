@@ -92,6 +92,9 @@ class Paddle:
             if not in_bottom_goal:
                 self.paddle_y = rink.bottom - self.radius
 
+        #Center-line restriction
+        self._check_center_line(rink)
+
         #goal walls
         self._check_goal_walls(rink)
 
@@ -198,6 +201,13 @@ class Paddle:
                 self.paddle_x = rink.bottom_goal.right - self.radius
             if self.paddle_y + self.radius > rink.bottom_goal.bottom:
                 self.paddle_y = rink.bottom_goal.bottom - self.radius
+
+    def _check_center_line(self, rink):
+        mid_y = rink.y + rink.height // 2
+        if self.half == 'top' and self.paddle_y + self.radius > mid_y:
+            self.paddle_y = mid_y - self.radius
+        elif self.half == 'bottom' and self.paddle_y - self.radius < mid_y:
+            self.paddle_y = mid_y + self.radius
     
     #still not entirely sure what the underlying math of this is I copy and pasted it from the puck and original paddle code
     def check_paddle_collision(self, other_paddle):

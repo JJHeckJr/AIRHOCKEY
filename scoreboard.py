@@ -11,6 +11,10 @@ class Scoreboard:
             self.top_score += 1
         elif goal == 'bottom':
             self.bottom_score += 1
+
+    def reset_score(self):
+        self.top_score = 0
+        self.bottom_score = 0
     
     def draw_scoreboard(self, window, rink):
         w = window.get_width()

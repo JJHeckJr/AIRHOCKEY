@@ -24,6 +24,15 @@ class GameBaseMode:
         if self.menu_button.is_clicked(event):
             return MENU
         return None
+
+    def on_enter(self):
+        self.reset_match()
+
+    def reset_match(self):
+        self.scoreboard.reset_score()
+        self.paused_game = False
+        self.flash_goal = None
+        self.flash_timer = 0
     
     def _update_flash(self):
         goal = self.puck.check_scored_goal(self.rink)
@@ -40,9 +49,6 @@ class GameBaseMode:
             self.flash_goal = None
 
     def _on_goal_reset(self):
-        pass
-
-    def reset_match(self):
         pass
 
     def _draw_flash(self, window):

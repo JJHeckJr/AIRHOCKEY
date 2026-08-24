@@ -40,6 +40,8 @@ class LocalGame(GameBaseMode):
         self.paddle1.update_paddle(self.rink)
         self.paddle2.update_paddle(self.rink, self.puck)
         self.paddle1.check_paddle_collision(self.paddle2)
+        self.paddle1._check_center_line(self.rink)
+        self.paddle2._check_center_line(self.rink)
         self._update_flash()
 
     def draw(self, window):

@@ -39,6 +39,11 @@ while is_running:
             if next_state is not None:
                 game_state = next_state
 
+                if game_state == PRACTICE:
+                    practice.reset_match()
+                elif game_state == LOCAL:
+                    local_game.reset_match()
+
     window.fill(BLACK)
     screen = screens.get(game_state)
     if screen is not None:
