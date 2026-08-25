@@ -1,7 +1,7 @@
 import pygame
 from pathlib import Path
 from constants import *
-from buttons import Button
+from buttons import Button, ImageButton
 
 
 
@@ -20,8 +20,11 @@ class Menu:
         #loading settings image than creating a new surface with the desired size
         icon_path = (Path(__file__).parent / "assets" / "settings_icon.png")
         self.settings_initial = pygame.image.load(icon_path).convert_alpha()
-        self.settings_icon = pygame.transform.smoothscale(self.settings_initial, (SETTINGS_ICON_SIZE, SETTINGS_ICON_SIZE))
-        self.settings_icon_rect = self.settings_icon.get_rect(topright=(w - SETTTNGS_ICON_MARGIN, SETTTNGS_ICON_MARGIN))
+        self.settings_button = ImageButton(
+        self.settings_initial, 
+        w - SETTINGS_ICON_SIZE - SETTINGS_ICON_MARGIN, 
+        SETTINGS_ICON_MARGIN, SETTINGS_ICON_SIZE, 
+        SETTINGS_ICON_SIZE)
 
 
     def handle_ui_events(self, event):
@@ -31,6 +34,8 @@ class Menu:
             return LOCAL_MENU
         if self.multiplayer_button.is_clicked(event):
             return MULTIPLAYER
+        if self.settings_button.is_clicked(event):
+            return SETTINGS
         return None
 
     def update(self):
@@ -43,9 +48,9 @@ class Menu:
         self.practice_button.draw_button(window)
         self.local_button.draw_button(window)
         self.multiplayer_button.draw_button(window)
+        self.settings_button.draw_button(window)
 
         font_size = max(36, int(h * 0.15))
         font = pygame.font.Font(None, font_size)
         title = font.render("Welcome to Air Hockey!", True, WHITE)
         window.blit(title, title.get_rect(center=(w // 2, int(h * .15))))
-        window.blit(self.settings_icon, self.settings_icon_rect)

@@ -6,8 +6,9 @@ from game_base_class import GameBaseMode
 from timer import Timer
 
 class LocalGame(GameBaseMode):
-    def __init__(self, window):
+    def __init__(self, window, game_settings):
         super().__init__(window)
+        self.game_settings = game_settings
         self.paddle1 = Paddle(self.rink, P1_KEYS, RED, half='bottom')
         self.paddle2 = Paddle(self.rink, P2_KEYS, GREEN, half='top')
         self.countdown_timer = 0
@@ -20,19 +21,20 @@ class LocalGame(GameBaseMode):
         next_state = super().handle_ui_events(event)
         if next_state is not None:
             return next_state
-        if self.timer.time_up and self.rematch_button.is_clicked(event):
+        if self.match_over and self.rematch_button.is_clicked(event):
             self.reset_match()
         return None
 
     def update(self):
         if self.paused_game:
             return
-        if self.timer.time_up:
+        if self.match_over:
             return
         if self.countdown_timer > 0:
             self.countdown_timer -= 1
             return
-        self.timer.update_score()
+        if self.game_settings.win_condition == "time":
+            self.timer.update_score()
         self.puck.move()
         self.puck.check_rink_walls(self.rink)
         self.puck.check_paddle_collision(self.paddle1)
@@ -43,6 +45,7 @@ class LocalGame(GameBaseMode):
         self.paddle1._check_center_line(self.rink)
         self.paddle2._check_center_line(self.rink)
         self._update_flash()
+        self._check_match_over()
 
     def draw(self, window):
         self.rink.draw_rink(window)
@@ -58,9 +61,23 @@ class LocalGame(GameBaseMode):
             w, h = window.get_width(), window.get_height()
             window.blit(text, text.get_rect(center=(w // 2, h // 2)))
         self.scoreboard.draw_scoreboard(window, self.rink)
-        self.timer.draw_timer(window, self.scoreboard.box_rect)
+        if self.game_settings.win_condition == "time":
+            self.timer.draw_timer(window, self.scoreboard.box_rect)
         self._draw_pause_overlay(window)
         self._draw_winner_overlay(window)
+
+
+    def reset_match(self):
+        self.match_over=False
+        self.scoreboard.top_score = 0
+        self.scoreboard.bottom_score = 0
+        self.timer.set_duration(self.game_settings.match_minutes * 60)
+        self.puck = Puck(self.rink)
+        self.paddle1.reset_paddle(self.rink)
+        self.paddle2.reset_paddle(self.rink)
+        self.flash_goal = None
+        self.flash_timer = 0
+        self.countdown_timer = 180
 
     def _on_goal_reset(self):
         self.puck.reset(self.rink, self.flash_goal)
@@ -68,13 +85,13 @@ class LocalGame(GameBaseMode):
         self.paddle2.reset_paddle(self.rink)
         self.countdown_timer = 180
 
-    def reset_match(self):
-        self.scoreboard.top_score = 0
-        self.scoreboard.bottom_score = 0
-        self.timer.reset()
-        self.puck = Puck(self.rink)
-        self.paddle1.reset_paddle(self.rink)
-        self.paddle2.reset_paddle(self.rink)
-        self.flash_goal = None
-        self.flash_timer = 0
-        self.countdown_timer = 180
+    def _check_match_over(self):
+        if self.game_settings.win_condition == "time":
+            self.match_over = self.timer.time_up
+
+        elif self.game_settings.win_condition == "score":
+            self.match_over = (
+            self.scoreboard.top_score >= self.game_settings.target_score
+            or self.scoreboard.bottom_score
+            >= self.game_settings.target_score
+            )
