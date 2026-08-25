@@ -5,6 +5,7 @@ from local_game import LocalGame
 from local_menu import LocalMenu
 from menu import Menu
 from practice import Practice
+from settings import GameSettings, SettingsMenu
 
 
 pygame.init()
@@ -12,18 +13,20 @@ window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE
 pygame.display.set_caption('Air Hockey')
 
 clock = pygame.time.Clock()
-
+game_settings = GameSettings()
 game_state = MENU
 menu = Menu(window)
 practice = Practice(window)
-local_game = LocalGame(window)
+local_game = LocalGame(window, game_settings)
 local_menu = LocalMenu(window, local_game)
+settings_menu = SettingsMenu(window, game_settings)
 
 screens = {
     MENU: menu,
     PRACTICE: practice,
     LOCAL_MENU: local_menu,
     LOCAL: local_game,
+    SETTINGS: settings_menu
 }
 
 is_running = True

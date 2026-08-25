@@ -15,6 +15,7 @@ class GameBaseMode:
         self.flash_goal = None
         self.flash_timer = 0
         self.scoreboard = Scoreboard()
+        self.match_over = False
 
     def handle_ui_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
@@ -80,7 +81,7 @@ class GameBaseMode:
         self.menu_button.draw_button(window)
 
     def _draw_winner_overlay(self, window):
-        if not self.timer.time_up:
+        if not self.match_over:
             return
         w, h = window.get_width(), window.get_height()
         overlay = pygame.Surface((w, h), pygame.SRCALPHA)

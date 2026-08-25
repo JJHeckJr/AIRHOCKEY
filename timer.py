@@ -22,6 +22,10 @@ class Timer:
         minutes, seconds = divmod(total_seconds, 60) #returns quotient and remainder of dividing a by b, as a tuple shortcuts for a// b, a % b.
         return f"{minutes}:{seconds:02d}"
 
+    def set_duration(self, duration_seconds):
+        self.duration_frames = duration_seconds * FPS
+        self.reset()
+
     def draw_timer(self, window, anchor_rect):
         font = pygame.font.Font(None, SCOREBOARD_FONT_SIZE)
         timer_text = font.render(self.get_time_string(), True, WHITE)
