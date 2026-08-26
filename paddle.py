@@ -1,6 +1,7 @@
 import math
 import pygame
 from constants import *
+from pathlib import Path
 
 class Paddle:
     def __init__(self, rink, keys, color, half=None, is_cpu=False):
@@ -17,6 +18,18 @@ class Paddle:
         self.speed = PADDLE_SPEED
         self.dash_speed = PADDLE_DASH_SPEED
         self.cpu_speed = CPU_PADDLE_SPEED
+
+        #loading images for paddle
+        asset_name = {
+            RED: "paddle_red_matte.png",
+            GREEN: "paddle_green_matte.png",
+            }.get(color)
+        self.image = None
+        if asset_name is not None:
+            image_path = Path(__file__).parent / "assets" / asset_name
+            image = pygame.image.load(image_path).convert_alpha()
+            diameter = self.radius * 2
+            self.image = pygame.transform.smoothscale(image, (diameter, diameter))
 
         #position//accounting for local mulitplayer
         if half == 'bottom':
@@ -238,6 +251,11 @@ class Paddle:
 
 
     def draw_paddle(self, window):
-        pygame.draw.circle(window, self.color, (self.paddle_x, self.paddle_y), self.radius)
+        center = (int(self.paddle_x), int(self.paddle_y))
+        if self.image is None:
+            pygame.draw.circle(window, self.color, center, self.radius)
+            return
+        image_rect = self.image.get_rect(center=center)
+        window.blit(self.image, image_rect)
 
 
