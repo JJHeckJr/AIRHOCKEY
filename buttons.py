@@ -34,6 +34,41 @@ class Button:
                 return True
         return False
 
+class MenuButton(Button):
+    def __init__(self, text, x, y, width, height, images):
+        super().__init__(text, x, y, width, height, bg_color=GRAY, text_color=WHITE)
+        image_size = int(height * 0.5)
+        self.images = [pygame.transform.smoothscale(image, (image_size, image_size))
+                       for image in images]
+
+    def draw_button(self, window):
+        mouse_pos = pygame.mouse.get_pos()
+        hovered = self.rect.collidepoint(mouse_pos)
+
+        background_color = LIGHT_GRAY if hovered else self.bg_color
+        text_color = BLACK if hovered else self.text_color
+
+        #Button Background
+        pygame.draw.rect(window, background_color, self.rect, border_radius=10)
+        accent_rect = pygame.Rect(self.rect.left, self.rect.top, 6, self.rect.height)
+        pygame.draw.rect(window, BLUE, accent_rect, border_radius=10)
+
+        #Left aligned labeling
+        font_size = max(12, int(self.rect.height * 0.45))
+        font = pygame.font.Font(None, font_size)
+        text_surface = font.render(self.text, True, text_color)
+        text_rect = text_surface.get_rect(midleft=(self.rect.left + 20, self.rect.centery))
+        window.blit(text_surface, text_rect)
+
+        #Images begin on right side of button
+        image_gap = 4
+        image_x = self.rect.right - 15
+
+        for image in reversed(self.images):
+            image_rect = image.get_rect(midright=(image_x, self.rect.centery))
+            window.blit(image, image_rect)
+            image_x = image_rect.left - image_gap
+
 class ImageButton:
     def __init__(self, image, x, y, width, height):
         self.image = pygame.transform.smoothscale(image, (width, height))
@@ -84,6 +119,7 @@ class OptionButton(Button):
         text = font.render(self.text, True, text_color)
 
         window.blit(text, text.get_rect(center=self.rect.center))
+
             
 
 

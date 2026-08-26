@@ -1,6 +1,7 @@
 import pygame
 import math
 from constants import *
+from pathlib import Path
 
 
 class Puck:
@@ -12,9 +13,16 @@ class Puck:
         self.velocity_x = PUCK_SPEED
         self.velocity_y = PUCK_SPEED
 
+        image_path = (Path(__file__).parent / "assets" / "puck_blue_matte.png")
+        image = pygame.image.load(image_path).convert_alpha()
+        diameter = self.radius * 2
+        self.image = pygame.transform.smoothscale(image, (diameter, diameter))
+
     #Drawing our puck
     def draw_puck(self, window):
-        pygame.draw.circle(window, BLUE, (self.puck_x, self.puck_y), self.radius)
+        center = (int(self.puck_x), int(self.puck_y))
+        image_rect = self.image.get_rect(center=center)
+        window.blit(self.image, image_rect)
 
     #creating movement for it
     def move(self):
